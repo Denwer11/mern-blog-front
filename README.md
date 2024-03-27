@@ -5,11 +5,12 @@ A simple blog written on the MERN stack (frontend)
   - Express
   - React JS
   - Node.js
-  - Multer
-  - Bcrypt
-  - Express-validator
-  - Mongoose
-  - Nodemon
-  - Jsonwebtoken
+
+  - Redux Toolkit
+  - Axios
+  - Sass
+  - Clsx
+  - Jest
+  - Material UI
 
 
