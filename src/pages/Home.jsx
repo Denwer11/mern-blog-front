@@ -6,8 +6,14 @@ import Grid from '@mui/material/Grid';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
+import { useEffect } from 'react';
 
 export const Home = () => {
+useEffect(() => {
+ 
+}, [])
+
+
   return (
     <>
       <Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">
