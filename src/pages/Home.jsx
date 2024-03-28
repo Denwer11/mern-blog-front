@@ -41,7 +41,9 @@ export const Home = () => {
               <Post
                 id={obj._id}
                 title={obj.title}
-                imageUrl={obj.imageUrl}
+                imageUrl={
+                  obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ""
+                }
                 user={obj.user}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
@@ -49,11 +51,8 @@ export const Home = () => {
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
-              
-            ),console.log(userData?._id)
+            )
           )}
-          {/* {console.log(userData?._id)}
-          {console.log()} */}
         </Grid>
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />

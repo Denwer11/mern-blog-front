@@ -14,7 +14,7 @@ export const AddPost = () => {
   const isAuth = useSelector(selectIsAuth);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [imageUrl, setImageUrl] = useState("");
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
@@ -48,16 +48,16 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags,
+        tags: tags.split(","),
         text,
       };
-
+      
       const { data } = await axios.post("/posts", fields);
-
       const id = data._id;
-      navigate(`/posts${id}`);
+      
+      navigate(`/posts/${id}`);
     } catch (err) {
-      console.warn("Ошибка при создании статьи");
+      alert("Ошибка при создании статьи");
     }
   };
 

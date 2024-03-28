@@ -13,5 +13,6 @@ A simple blog written on the MERN stack (frontend)
   - Jest
   - Material UI
   - SimpleMDE
+  - Markdown
 
 
