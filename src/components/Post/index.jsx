@@ -11,6 +11,7 @@ import { UserInfo } from "../UserInfo";
 import { PostSkeleton } from "./Skeleton";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { fetchRemovePost } from "../../redux/slices/posts";
 
 export const Post = ({
   id,
@@ -33,7 +34,10 @@ export const Post = ({
   }
 
   const onClickRemove = () => {
-    dispatch();
+    dispatch(fetchRemovePost(id));
+    if (window.confirm("Вы действительно хотите удалить статью?")) {
+      dispatch(fetchRemovePost(id));
+    }
   };
 
   return (
@@ -63,7 +67,7 @@ export const Post = ({
           <h2
             className={clsx(styles.title, { [styles.titleFull]: isFullPost })}
           >
-            {isFullPost ? title : <a href={`/posts/${id}`}>{title}</a>}
+            {isFullPost ? title : <Link to={`/posts/${id}`}>{title}</Link>}
           </h2>
           <ul className={styles.tags}>
             {tags.map((name) => (
