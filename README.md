@@ -12,5 +12,6 @@ A simple blog written on the MERN stack (frontend)
   - Clsx
   - Jest
   - Material UI
+  - SimpleMDE
 
 
