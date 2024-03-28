@@ -49,8 +49,11 @@ export const Home = () => {
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
-            )
+              
+            ),console.log(userData?._id)
           )}
+          {/* {console.log(userData?._id)}
+          {console.log()} */}
         </Grid>
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
