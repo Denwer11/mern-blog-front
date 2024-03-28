@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
@@ -7,18 +13,20 @@ import "easymde/dist/easymde.min.css";
 import styles from "./AddPost.module.scss";
 import { useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/slices/auth";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "../../axios";
 
 export const AddPost = () => {
+  const { id } = useParams();
   const isAuth = useSelector(selectIsAuth);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
   const inputFileRef = useRef(null);
+  const isEditing = Boolean(id);
 
   const handleChangeFile = async (e) => {
     try {
@@ -51,15 +59,35 @@ export const AddPost = () => {
         tags: tags.split(","),
         text,
       };
-      
-      const { data } = await axios.post("/posts", fields);
-      const id = data._id;
-      
-      navigate(`/posts/${id}`);
+
+      const { data } = isEditing
+        ? await axios.patch(`/posts/${id}`, fields)
+        : await axios.post("/posts", fields);
+
+      const _id = isEditing ? id : data._id;
+
+      navigate(`/posts/${_id}`);
     } catch (err) {
       alert("Ошибка при создании статьи");
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/posts/${id}`)
+        .then(({ data }) => {
+          setTitle(data.title);
+          setText(data.text);
+          setTags(data.tags);
+          setImageUrl(data.imageUrl);
+        })
+        .catch((err) => {
+          console.warn(err);
+          alert("Ошибка при получении статьи");
+        });
+    }
+  }, []);
 
   const options = useMemo(
     () => ({
@@ -81,7 +109,7 @@ export const AddPost = () => {
   }
 
   return (
-    <Paper style={{ padding: 30 }}>
+    <Paper style={{ padding: 30 }} >
       <Button
         onClick={() => inputFileRef.current.click()}
         variant="outlined"
@@ -137,7 +165,7 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
-          Опубликовать
+          {isEditing ? "Сохранить" : "Опубликовать"}
         </Button>
         <Link to="/">
           <Button size="large">Отмена</Button>
