@@ -1,6 +1,4 @@
 import React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
@@ -8,30 +6,24 @@ import { CommentsBlock } from "../components/CommentsBlock";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts, fetchTags } from "../redux/slices/posts";
+import Sort from "./Sort";
 
 export const Home = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
-  const { posts, tags } = useSelector((state) => state.posts);
+  const { posts, tags, sort } = useSelector((state) => state.posts);
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
   useEffect(() => {
-    dispatch(fetchPosts());
+    dispatch(fetchPosts(sort.sortProperty));
     dispatch(fetchTags());
-  }, []);
+  }, [sort.sortProperty]);
 
   return (
     <>
-      <Tabs
-        style={{ marginBottom: 15 }}
-        value={0}
-        aria-label="basic tabs example"
-      >
-        <Tab label="Новые" />
-        <Tab label="Популярные" />
-      </Tabs>
+      <Sort value={sort} />
       <Grid container spacing={4}>
         <Grid xs={8} item>
           {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) =>

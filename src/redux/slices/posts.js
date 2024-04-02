@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../axios";
 
-export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  const { data } = await axios.get("/posts");
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async (sort) => {
+  const { data } = await axios.get(`/posts?sortBy=${sort}`);
+  console.log(`/posts?sortBy=${sort}`);
   return data;
 });
 
@@ -18,6 +19,10 @@ export const fetchRemovePost = createAsyncThunk(
 );
 
 const initialState = {
+  sort: {
+    name: "Новые",
+    sortProperty: "createdAt",
+  },
   posts: {
     items: [],
     status: "loading",
@@ -28,7 +33,11 @@ const initialState = {
 const postsSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    setSort(state, action) {
+      state.sort = action.payload;
+    },
+  },
   extraReducers: {
     [fetchPosts.pending]: (state) => {
       state.posts.items = [];
@@ -63,5 +72,6 @@ const postsSlice = createSlice({
     },
   },
 });
+export const { setSort } = postsSlice.actions;
 
 export const postsReducer = postsSlice.reducer;
