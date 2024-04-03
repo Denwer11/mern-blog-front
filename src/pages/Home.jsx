@@ -1,25 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts, fetchTags } from "../redux/slices/posts";
-import Sort from "./Sort";
+import { fetchPosts, fetchPostsByTag, fetchTags } from "../redux/slices/posts";
+import Sort from "../components/Sort";
 
 export const Home = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
-  const { posts, tags, sort } = useSelector((state) => state.posts);
+  const { posts, tags, sort, tag } = useSelector((state) => state.posts);
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
   useEffect(() => {
-    dispatch(fetchPosts(sort.sortProperty));
     dispatch(fetchTags());
-  }, [sort.sortProperty]);
+    if (tag !== "") {
+      dispatch(fetchPostsByTag(tag));
+    } else {
+      dispatch(fetchPosts(sort.sortProperty));
+    }
+  }, [sort.sortProperty, tag]);
 
   return (
     <>

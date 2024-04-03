@@ -1,16 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../axios";
 
-export const fetchPosts = createAsyncThunk("posts/fetchPosts", async (sort) => {
-  const { data } = await axios.get(`/posts?sortBy=${sort}`);
-  console.log(`/posts?sortBy=${sort}`);
-  return data;
-});
+export const fetchPosts = createAsyncThunk(
+  "posts/fetchPosts",
+  async (sort) => {
+    const { data } = await axios.get(`/posts?sortBy=${sort}`);
+    return data;
+  }
+);
+
+export const fetchPostsByTag = createAsyncThunk(
+  "posts/fetchPostsByTag",
+  async (tag) => {
+    const { data } = await axios.get(`/tags/${tag}`);
+    console.log(axios.get(`/tags/${tag}`));
+    return data;
+  }
+);
 
 export const fetchTags = createAsyncThunk("posts/fetchTags", async () => {
   const { data } = await axios.get("/tags");
   return data;
 });
+
 export const fetchRemovePost = createAsyncThunk(
   "posts/fetchRemovePost",
   async (id) => {
@@ -23,6 +35,7 @@ const initialState = {
     name: "Новые",
     sortProperty: "createdAt",
   },
+  tag: "",
   posts: {
     items: [],
     status: "loading",
@@ -36,6 +49,9 @@ const postsSlice = createSlice({
   reducers: {
     setSort(state, action) {
       state.sort = action.payload;
+    },
+    setTag(state, action) {
+      state.tag = action.payload;
     },
   },
   extraReducers: {
@@ -65,6 +81,19 @@ const postsSlice = createSlice({
       state.tags.status = "error";
     },
 
+    [fetchPostsByTag.pending]: (state) => {
+      state.posts.items = [];
+      state.posts.status = "loading";
+    },
+    [fetchPostsByTag.fulfilled]: (state, action) => {
+      state.posts.items = action.payload;
+      state.posts.status = "loaded";
+    },
+    [fetchPostsByTag.rejected]: (state) => {
+      state.posts.items = [];
+      state.posts.status = "error";
+    },
+
     [fetchRemovePost.pending]: (state, action) => {
       state.posts.items = state.posts.items.filter(
         (obj) => obj._id !== action.meta.arg
@@ -72,6 +101,6 @@ const postsSlice = createSlice({
     },
   },
 });
-export const { setSort } = postsSlice.actions;
+export const { setSort, setTag } = postsSlice.actions;
 
 export const postsReducer = postsSlice.reducer;
