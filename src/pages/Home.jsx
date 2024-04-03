@@ -7,9 +7,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts, fetchPostsByTag, fetchTags } from "../redux/slices/posts";
 import Sort from "../components/Sort";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags, sort, tag } = useSelector((state) => state.posts);
 
@@ -21,6 +23,7 @@ export const Home = () => {
     if (tag !== "") {
       dispatch(fetchPostsByTag(tag));
     } else {
+      navigate("/");
       dispatch(fetchPosts(sort.sortProperty));
     }
   }, [sort.sortProperty, tag]);
